@@ -23,13 +23,7 @@ pipeline {
             }
         }
 
-        stage('sonarqubereport'){
-            steps{
-                withSonarQubeEnv('sonarcloud') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
-        }
+        
 
 
         stage('Deploy') {
