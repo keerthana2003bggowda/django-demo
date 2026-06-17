@@ -13,21 +13,24 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'pip install -r requirements.txt'
+                  sh '''
+                python3 -m pip install -r requirements.txt
+                '''
             }
         }
 
-        stage('sonarqubereport') {
-            steps {
+        stage('sonarqubereport'){
+            steps{
                 withSonarQubeEnv('sonarcloud') {
-                    sh 'sonar-scanner'
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
 
+
         stage('Deploy') {
             steps {
-                sh 'nohup gunicorn myproject.wsgi:application --bind 0.0.0.0:9090 > app.log 2>&1 &'
+                sh 'nohup gunicor Naturepro.wsgi:application --bind 0.0.0.0:9090 > app.log 2>&1 &'
             }
         }
     }
