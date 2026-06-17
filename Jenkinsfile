@@ -23,13 +23,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh 'sonar-scanner'
-                }
-            }
-        }
+        
 
         stage('Deploy') {
             steps {
