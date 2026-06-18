@@ -29,6 +29,7 @@ pipeline {
                 sh '''
                      . venv/bin/activate
                     nohup gunicorn Naturepro.wsgi:application --bind 0.0.0.0:9090 > app.log 2>&1 &
+                    sleep 5
                 '''
                 
             }
