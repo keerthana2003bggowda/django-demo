@@ -23,11 +23,14 @@ pipeline {
             }
         }
 
-        
-
+    
         stage('Deploy') {
             steps {
-                sh 'nohup gunicorn Naturepro.wsgi:application --bind 0.0.0.0:9090 > app.log 2>&1 &'
+                sh '''
+                     . venv/bin/activate
+                    nohup gunicorn Naturepro.wsgi:application --bind 0.0.0.0:9090 > app.log 2>&1 &
+                '''
+                
             }
         }
     }
