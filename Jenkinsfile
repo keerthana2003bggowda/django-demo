@@ -22,6 +22,19 @@ pipeline {
             
             }
         }
+        stage('SonarCloud Report') {
+            steps {
+                withSonarQubeEnv('sonarcloud') {       
+                    sh '''
+                        sonar-scanner \
+                          -Dsonar.projectKey=keerthana2003bggowda_django-demo \
+                          -Dsonar.organization=keerthana2003bggowda \
+                          -Dsonar.sources=. \
+                          -Dsonar.exclusions=venv/**,**/__pycache__/**,**/*.pyc
+                    '''
+                }
+            }
+        }
 
     
         stage('Deploy') {
