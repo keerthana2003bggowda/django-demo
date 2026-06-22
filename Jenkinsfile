@@ -22,13 +22,13 @@ pipeline {
             
             }
         }
-        stage('SonarCloud Report') {
+        stage('SonarQube Report') {
             steps {
-                withSonarQubeEnv('sonarcloud') {       
+                withSonarQubeEnv('sonarqube') {
                     sh '''
+                        export SONAR_SCANNER_OPTS="-Xmx1024m"
                         sonar-scanner \
-                          -Dsonar.projectKey=keerthana2003bggowda_django-demo \
-                          -Dsonar.organization=keerthana2003bggowda \
+                          -Dsonar.projectKey=django-demo \
                           -Dsonar.sources=. \
                           -Dsonar.exclusions=venv/**,**/__pycache__/**,**/*.pyc
                     '''
