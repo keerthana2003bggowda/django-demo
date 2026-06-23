@@ -46,7 +46,7 @@ pipeline {
                 )]) {
 
                 sh '''
-                    tar -czf app-${BUILD_NUMBER}.tar.gz .
+                    tar --warning=no-file-changed -czf app-${BUILD_NUMBER}.tar.gz .
 
                      curl -u $JFROG_USER:$JFROG_TOKEN \
                     -T app-${BUILD_NUMBER}.tar.gz \
