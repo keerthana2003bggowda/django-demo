@@ -1,7 +1,7 @@
 pipeline {
     agent { label 'agent3' }
      environment {
-        JFROG_CREDS = credentials('jfrog-credentials')
+        JFROG_CREDS = credentials('artifactory-creds')
         JFROG_URL = 'http://13.203.219.26:8082/artifactory/django-artifacts'
     }
 
