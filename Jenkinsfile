@@ -22,15 +22,12 @@ pipeline {
             
             }
         }
-        stage('SonarQube Report') {
+         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
+                withSonarQubeEnv('SonarQube') {
                     sh '''
-                        export SONAR_SCANNER_OPTS="-Xmx1024m"
-                        sonar-scanner \
-                          -Dsonar.projectKey=django-demo \
-                          -Dsonar.sources=. \
-                          -Dsonar.exclusions=venv/**,**/__pycache__/**,**/*.pyc
+                        . venv/bin/activate
+                        sonar-scanner
                     '''
                 }
             }
