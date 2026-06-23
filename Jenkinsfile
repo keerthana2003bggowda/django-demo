@@ -1,5 +1,9 @@
 pipeline {
     agent { label 'agent3' }
+     environment {
+        JFROG_CREDS = credentials('jfrog-credentials')
+        JFROG_URL = 'http://13.203.219.26:8082/artifactory/django-artifacts'
+    }
 
     stages {
 
@@ -30,6 +34,21 @@ pipeline {
                         sonar-scanner
                     '''
                 }
+            }
+        }
+        stage('Publish to JFrog') {
+            steps {
+                sh """
+                    tar --exclude=venv \
+                        --exclude=.git \
+                        --exclude=__pycache__ \
+                        --exclude=*.pyc \
+                        -czf django-demo-${BUILD_NUMBER}.tar.gz .
+
+                    curl -u $JFROG_CREDS_USR:$JFROG_CREDS_PSW \
+                         -T django-demo-${BUILD_NUMBER}.tar.gz \
+                         "${JFROG_URL}/django-demo-${BUILD_NUMBER}.tar.gz"
+                """
             }
         }
 
