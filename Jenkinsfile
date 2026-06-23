@@ -52,7 +52,12 @@ pipeline {
                 )]) {
 
                 sh '''
-                    tar --warning=no-file-changed -czf app-${BUILD_NUMBER}.tar.gz .
+                    tar -czf app-${BUILD_NUMBER}.tar.gz \
+                    --exclude=venv \
+                    --exclude=.git \
+                    --exclude=.scannerwork \
+                    --exclude=*.tar.gz \
+                    .
 
                      curl -u $JFROG_USER:$JFROG_TOKEN \
                     -T app-${BUILD_NUMBER}.tar.gz \
