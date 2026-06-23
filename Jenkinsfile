@@ -35,10 +35,13 @@ pipeline {
 
     
         stage('Deploy') {
-            steps {
-                sh 'nohup gunicorn Naturepro.wsgi:application --bind 0.0.0.0:9090 '
-            }
-        }
+    steps {
+        sh '''
+        source venv/bin/activate
+        nohup gunicorn Naturepro.wsgi:application --bind 0.0.0.0:9090 > gunicorn.log 2>&1 &
+        '''
+    }
+}
     }
 
     post {
