@@ -39,18 +39,22 @@ pipeline {
         
         stage('Publish to JFrog') {
             steps {
-                 withCredentials([usernamePassword(
+                withCredentials([usernamePassword(
                     credentialsId: 'artifactory-creds',
                     usernameVariable: 'JFROG_USER',
-                    passwordVariable: 'JFROG_TOKEN'
-             )]) {
+                     passwordVariable: 'JFROG_TOKEN'
+                )]) {
+
                 sh '''
-                    tar --exclude=venv --exclude=.git --exclude=__pycache__ --exclude=*.pyc --exclude=*.tar.gz -czf django-demo-${BUILD_NUMBER}.tar.gz .
-                    curl -u $JFROG_USER:$JFROG_TOKEN -T django-demo-${BUILD_NUMBER}.tar.gz "http://13.203.219.26:8082/artifactory/django-artifacts/django-demo-${BUILD_NUMBER}.tar.gz"
+                    tar -czf app-${BUILD_NUMBER}.tar.gz .
+
+                     curl -u $JFROG_USER:$JFROG_TOKEN \
+                    -T app-${BUILD_NUMBER}.tar.gz \
+                     "$JFROG_URL/app-${BUILD_NUMBER}.tar.gz"
                 '''
+                }
+         }
         }
-    }
-}
 
     
         stage('Deploy') {
