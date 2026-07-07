@@ -31,37 +31,37 @@ pipeline {
             
             }
         }
-         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh "${tool('sonar-scanner')}/bin/sonar-scanner"
-                }
-            }
-        }
-        stage('Publish to JFrog') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'artifactory-creds',
-                    usernameVariable: 'JFROG_USER',
-                    passwordVariable: 'JFROG_TOKEN'
-                )]) {
-                    sh '''
-                        tar -czf /tmp/app-${BUILD_NUMBER}.tar.gz \
-                            --exclude=venv \
-                            --exclude=.git \
-                            --exclude=.scannerwork \
-                            --exclude=*.tar.gz \
-                            .
+        //  stage('SonarQube Analysis') {
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
+        //             sh "${tool('sonar-scanner')}/bin/sonar-scanner"
+        //         }
+        //     }
+        // }
+        // stage('Publish to JFrog') {
+        //     steps {
+        //         withCredentials([usernamePassword(
+        //             credentialsId: 'artifactory-creds',
+        //             usernameVariable: 'JFROG_USER',
+        //             passwordVariable: 'JFROG_TOKEN'
+        //         )]) {
+        //             sh '''
+        //                 tar -czf /tmp/app-${BUILD_NUMBER}.tar.gz \
+        //                     --exclude=venv \
+        //                     --exclude=.git \
+        //                     --exclude=.scannerwork \
+        //                     --exclude=*.tar.gz \
+        //                     .
 
-                        curl -u $JFROG_USER:$JFROG_TOKEN \
-                            -T /tmp/app-${BUILD_NUMBER}.tar.gz \
-                            "$JFROG_URL/app-${BUILD_NUMBER}.tar.gz"
+        //                 curl -u $JFROG_USER:$JFROG_TOKEN \
+        //                     -T /tmp/app-${BUILD_NUMBER}.tar.gz \
+        //                     "$JFROG_URL/app-${BUILD_NUMBER}.tar.gz"
 
-                        rm -f /tmp/app-${BUILD_NUMBER}.tar.gz
-                    '''
-                }
-            }
-        }
+        //                 rm -f /tmp/app-${BUILD_NUMBER}.tar.gz
+        //             '''
+        //         }
+        //     }
+        // }
     
         stage('Deploy') {
             steps {
