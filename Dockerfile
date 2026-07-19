@@ -1,6 +1,14 @@
-FROM python:3.12
+# FROM python:3.12
+# WORKDIR /app
+# COPY . .
+# RUN pip install -r requirements.txt
+# EXPOSE 8000
+# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+FROM python:3.12-slim
 WORKDIR /app
-COPY . .
+COPY requirements.txt .
 RUN pip install -r requirements.txt
-EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+COPY . .
+EXPOSE 9090
+CMD ["gunicorn", "Naturepro.wsgi:application", "--bind", "0.0.0.0:8000"]
