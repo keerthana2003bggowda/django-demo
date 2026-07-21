@@ -1,0 +1,46 @@
+pipeline {
+    agent { label 'python' }
+
+    environment {
+        IMAGE = 'docker.io/keerthana2003bggowd/django-demo'
+        TAG = "${BUILD_NUMBER}"
+        CONTAINER = 'django-demo'
+    }
+
+    stages {
+        stage('Clone Repo') {
+            steps {
+                git branch: 'main',
+                    credentialsId: 'github-pat',
+                    url: 'https://github.com/keerthana2003bggowda/django-demo.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'docker build -t "$IMAGE:$TAG" -t "$IMAGE:latest" .'
+            }
+        }
+
+        stage('Push') {
+            steps {
+                withCredentials([
+                    usernamePassword(credentialsId: 'dockerhub-creds',
+                     passwordVariable: 'DOCKERHUB_PWD',
+                      usernameVariable: 'DOCKERHUB_USER'
+                      )
+                      ]) {
+                    sh 'echo "$DOCKERHUB_PWD" | docker login -u "$DOCKERHUB_USER" --password-stdin'
+                    sh 'docker push "$IMAGE:$TAG"'
+                    sh 'docker push "$IMAGE:latest"'
+                }
+            }
+        }
+
+        stage('K8s Deployment') {
+            steps {
+                sh 'kubectl apply -f k8s-deploy.yaml'
+            }
+        }
+    }
+}
